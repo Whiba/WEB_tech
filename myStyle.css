@@ -19,7 +19,8 @@ body {
 	background-size: cover;
 }
 
-header { border-style: solid;
+header { 
+	border-style: solid;
 	border-width: 2px;	
 }
 
@@ -46,6 +47,7 @@ img {
 	border-width: 4px;
 	border-color: blue;
 	margin: 0 auto;
+	display: block;
 }
 
 button {
