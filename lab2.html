@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="myStyle.css" rel="stylesheet">
+		<title>Лабораторная работа 2</title>		
+	</head>
+
+	<header>
+		<h1>Подписаться на рассылку</h1>
+	</header>
+	
+	<form>
+		<fieldset>
+			<legend><b>Контактная информация</b></legend>
+			<!--Имя может быть длиной от 2 до 15 символов, русскими буквами-->
+			<label for="name">Имя </label><input type="text" name="name" pattern="[А-Яа-яЁё]{2,15}" placeholder="Введите ваше имя">
+			<!--Почта должна быть написана английскими буквами, а по середине иметь знак "собака"-->
+			<label for="email">E-mail<em>* </em></label><input type="email" name="email" pattern="\S+@[a-z]+.+[a-z]+" placeholder="mail@mail.com" required>
+			<input type="submit" value="Отправить">
+		</fieldset>	
+	</form>
+</html>
+
+<!--
+legend заголовок блока fieldset
+тэг <em> преобразует текст в курсивный
+label просто текст
+input используется для создания полей формы, а зависимости от типа
+pattern для проверки с помощью регулярных выражений. Квадратные скобки устанавливают диапазон допустимых символов, число в фигурных скобках указывает сколько таких символов может быть
+placeholder то что пишется серым в окне текста в качестве примера заполнения
+for определяет, к какому полю формы привязан данный элемент
+-->
