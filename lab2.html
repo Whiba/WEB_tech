@@ -17,6 +17,19 @@
 			<label for="name">Имя </label><input type="text" name="name" pattern="[А-Яа-я]{2,15}" placeholder="Введите ваше имя">
 			<!--Почта должна быть написана английскими буквами, а по середине иметь знак "собака"-->
 			<label for="email">E-mail<em>* </em></label><input type="email" name="email" pattern="[a-z]+@[a-z]+\.[a-z]+" placeholder="mail@mail.com" required>
+			<form>
+				<label for="sex">Пол</label>
+				<select name="sex" >
+					<option value="m"> Мужской </option>
+					<option value="f"> Женский </option>
+				</select>
+			</form>
+			<form>
+				<label for="number">Возраст </label><input type="number" name="number" min="5" max="100" step="1">
+			</form>
+			<form>
+				<input type="checkbox" name="agree" value="1" /> Согласен на обработку персональных данных <br />
+			</form>
 			<input type="submit" value="Отправить">
 		</fieldset>	
 	</form>
