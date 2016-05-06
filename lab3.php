@@ -1,27 +1,42 @@
 <?php
-	// РѕС‚РєСЂС‹РІР°РµРј СЃРµСЃСЃРёСЋ
-	session_start(); 
+	// открываем сессию
+	session_start();
+	
+	// переменные
 	$file = 'myFile.txt';
-	$itsOkToWriteFile = 1;
+	$itsOkToWriteFile = true;
 	$nameError = "";
 	$emailError = "";
 	$sexError = "";
 	$ageError = "";
-	
+	$conError = "";	
 	$my_name = "";
 	$my_age = "";
 	$my_email = "";
 	$my_sex = "";
+	$dbhost = "localhost";
+	$dbuser = "AnaShu";
+	$dbpass = ",tksqvbirf";
+	$dbname = "webTech";
 	
+	// проверка назначен ли уникальный ключ
 	if (!isset($_SESSION['token'])){
 		$_SESSION['token']=uniqid(md5(rand()), true);
+	}
+	
+	// создаем соединение
+	$con = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+	
+	// проверка соединения
+	if (mysqli_connect_errno()) {
+		$conError = "Ошибка соединения с БД: " . mysqli_connect_error();
+		exit();
 	}
 	
 	// используем метод POST?
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		// проверка на соответствие самому себе
-		if ($_POST["My_key"] == $_SESSION['token']) {
-			echo "KEY";
+		if ($_POST["mykey"] == $_SESSION['token']) {
 			// данные были отправлены формой?
 			if($_POST["Submit"]){
 				
@@ -29,17 +44,17 @@
 				if (empty($_POST['name']))
 				{
 					$nameError = "Пожалуйста, введите имя";
-					$itsOkToWriteFile = 0;
+					$itsOkToWriteFile = false;
 				}
 				else {
 					$my_name = $_POST['name'];
 					if ($my_name.count_chars > 15) {
 						$nameError = "Слишком длинное имя";
-						$itsOkToWriteFile = 0;
+						$itsOkToWriteFile = false;
 					}
-					if (!ereg("^[А-Яа-я]{2,15}$",$my_name)) {
-						$nameError = "Какое-то неправильное имя";
-						$itsOkToWriteFile = 0;
+					if (!preg_match("/^[А-Я][а-я]*/", $my_name)) {
+						$nameError = "Некорректное имя";
+						$itsOkToWriteFile = false;
 					}
 				}
 				
@@ -47,20 +62,20 @@
 				if (empty($_POST['email']))
 				{
 					$emailError = "Пожалуйста, введите email";
-					$itsOkToWriteFile = 0;
+					$itsOkToWriteFile = false;
 				}
 				else {
 					$my_email = $_POST['email'];
 					if (!filter_var($my_email, FILTER_VALIDATE_EMAIL)) {
 						$emailError = "Некорректный email";
-						$itsOkToWriteFile = 0;
+						$itsOkToWriteFile = false;
 					}
 				}
 				
 				// проверяем пол
 				if (empty($_POST['sex'])) {
 					$sexError = "Пожалуйста, укажите ваш пол";
-					$itsOkToWriteFile = 0;
+					$itsOkToWriteFile = false;
 				}
 				else {
 					$my_sex = $_POST['sex'];
@@ -69,34 +84,42 @@
 				// проверяем возраст
 				if (empty($_POST['age'])) {
 					$ageError = "Пожалуйста, укажите ваш возраст";
-					$itsOkToWriteFile = 0;
+					$itsOkToWriteFile = false;
 				}
 				else {
 					$my_age = $_POST['age'];
 					if (!filter_var($my_age, FILTER_VALIDATE_INT)) {
 						$ageError = "Некорректный возраст";
-						$itsOkToWriteFile = 0;
+						$itsOkToWriteFile = false;
 					}
 					if ($my_age < 5 || $my_age > 100) {
 						$ageError = "Некорректный возраст";
-						$itsOkToWriteFile = 0;
+						$itsOkToWriteFile = false;
 					}
 				}
 			}
 		}
 		
 		if ($itsOkToWriteFile) {
-			$data = 'Name: ' . $my_name . '; E-mail: ' . $_POST['email'] . '; Sex: ' . $my_sex . '; Age: ' . $my_age;
+			// загрузка в файл
+			$data = 'Name: ' . $my_name . '; E-mail: ' . $my_email . '; Sex: ' . $my_sex . '; Age: ' . $my_age . "\n";
 			file_put_contents($file, $data);
-		}
-		
-		$name2=iconv("utf-8", "cp1251", $_POST['name']);
-		echo 'My_key' , $_POST['My_key'], "\n";
-		echo 'token' , $_SESSION['token'], "\n";
-		
-		echo ' Name ', $name2, ' Email ', $_POST['email'], ' Sex ', $_POST['sex'], ' Age ', $_POST['age'];
+			
+			// загрузка в БД
+			$querry = $con->prepare("INSERT INTO subscribe (name, email, sex, age) VALUES (?, ?, ?, ?)");
+			$querry->bind_param("sssd", $my_name, $my_email, $my_sex, $my_age); // "sssd" - это типы данных для каждого параметра по порядку
+			$querry->execute(); // выполнить запрос
+			$querry->close();
+		}		
+		//echo ' Name ', $my_name, ' Email ', $my_email, ' Sex ', $_POST['sex'], ' Age ', $_POST['age'];
 	}
 	
-	// Закрываем сессию
+	// подставляем файл чтобы он считывался и выполнялся как php
+	include ('lab2.html');
+	
+	// закрываем сессию
 	//session_destroy();
+	
+	// закрываем соединение
+	$con->close();
 ?>

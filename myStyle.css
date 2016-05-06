@@ -87,8 +87,28 @@ em {
 	color: red;
 }
 
+select {
+	margin: 0 auto;
+	display: inline;
+	margin-top: 5px;
+}
+
 input {
 	margin: 0 auto;
-	display: block;
+	display: inline;
 	margin-top: 5px;
+}
+
+input[type="checkbox"]
+{
+	display: inline;
+}
+
+input[type="text"]
+{
+	
+}
+
+form {
+	margin: 0 auto;
 }

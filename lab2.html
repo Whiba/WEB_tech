@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8">
 		<link href="myStyle.css" rel="stylesheet">
-		<link href="lab3.php">
 		<title>Лабораторная работа 2</title>		
 	</head>
 	
@@ -11,27 +10,31 @@
 		<h1>Подписаться на рассылку</h1>
 	</header>
 	
-	<form action="lab3.php" method="post">
+	<form action="lab3.php" method="post" novalidate>
 		<fieldset>
 			<legend><b>Контактная информация</b></legend>
 			<!--Имя может быть длиной от 2 до 15 символов, русскими буквами-->
 			<label for="name">Имя </label><input type="text" name="name" pattern="[А-Яа-я]{2,15}" placeholder="Введите ваше имя" >
+			<span><em><?=$nameError?></em></span><br />
 			<!--Почта должна быть написана английскими буквами, а по середине иметь знак "собака"-->
-			<label for="email">E-mail<em>* </em></label><input type="email" name="email" pattern="[a-z]+@[a-z]+\.[a-z]+" placeholder="mail@mail.com" required>
+			<label for="email">E-mail<em>* </em></label><input type="email" name="email" pattern="[0-9a-z]+@[a-z]+\.[a-z]+" placeholder="mail@mail.com" required>
+			<span><em><?=$emailError?></em></span><br />
 			<form>
 				<label for="sex">Пол</label>
 				<select name="sex" >
 					<option value="male" > Мужской </option>
 					<option value="female" > Женский </option>
 				</select>
+				<span><em><?=$sexError?></em></span>
 			</form>
-			<form>
-				<label for="age">Возраст<em>* </em></label><input type="number" name="age" min="5" max="100" step="1" >
-			</form>
+			<br />
+			<label for="age">Возраст<em>* </em></label><input type="text" name="age" pattern="[0-9]{1,3}" placeholder="20" required>
+			<span><em><?=$ageError?></em></span>
 			<form>
 				<input type="checkbox" name="agree" value="1" onchange="document.getElementById('submit').disabled = !this.checked"> Согласен на обработку персональных данных<em>* </em>
 			</form>
-			<input type="hidden" name="My_key" value="<?=$_SESSION['token']?>" />
+			<input type="hidden" name="mykey" value="<?=$_SESSION['token']?>" />
+			<span><em><?=$conError?></em></span><br />
 			<input type="submit" id="submit" name="Submit" value="Отправить" disabled>
 		</fieldset>	
 	</form>
