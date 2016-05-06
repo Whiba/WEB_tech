@@ -3,34 +3,36 @@
 	<head>
 		<meta charset="utf-8">
 		<link href="myStyle.css" rel="stylesheet">
+		<link href="lab3.php">
 		<title>Лабораторная работа 2</title>		
 	</head>
-
+	
 	<header>
 		<h1>Подписаться на рассылку</h1>
 	</header>
 	
-	<form>
+	<form action="lab3.php" method="post">
 		<fieldset>
 			<legend><b>Контактная информация</b></legend>
 			<!--Имя может быть длиной от 2 до 15 символов, русскими буквами-->
-			<label for="name">Имя </label><input type="text" name="name" pattern="[А-Яа-я]{2,15}" placeholder="Введите ваше имя">
+			<label for="name">Имя </label><input type="text" name="name" pattern="[А-Яа-я]{2,15}" placeholder="Введите ваше имя" >
 			<!--Почта должна быть написана английскими буквами, а по середине иметь знак "собака"-->
 			<label for="email">E-mail<em>* </em></label><input type="email" name="email" pattern="[a-z]+@[a-z]+\.[a-z]+" placeholder="mail@mail.com" required>
 			<form>
 				<label for="sex">Пол</label>
 				<select name="sex" >
-					<option value="m"> Мужской </option>
-					<option value="f"> Женский </option>
+					<option value="male" > Мужской </option>
+					<option value="female" > Женский </option>
 				</select>
 			</form>
 			<form>
-				<label for="number">Возраст </label><input type="number" name="number" min="5" max="100" step="1">
+				<label for="age">Возраст<em>* </em></label><input type="number" name="age" min="5" max="100" step="1" >
 			</form>
 			<form>
-				<input type="checkbox" name="agree" value="1" /> Согласен на обработку персональных данных <br />
+				<input type="checkbox" name="agree" value="1" onchange="document.getElementById('submit').disabled = !this.checked"> Согласен на обработку персональных данных<em>* </em>
 			</form>
-			<input type="submit" value="Отправить">
+			<input type="hidden" name="My_key" value="<?=$_SESSION['token']?>" />
+			<input type="submit" id="submit" name="Submit" value="Отправить" disabled>
 		</fieldset>	
 	</form>
 </html>
