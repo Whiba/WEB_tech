@@ -103,7 +103,7 @@
 		if ($itsOkToWriteFile) {
 			// загрузка в файл
 			$data = 'Name: ' . $my_name . '; E-mail: ' . $my_email . '; Sex: ' . $my_sex . '; Age: ' . $my_age . "\n";
-			file_put_contents($file, $data);
+			file_put_contents($file, $data, FILE_APPEND);
 			
 			// загрузка в БД
 			$querry = $con->prepare("INSERT INTO subscribe (name, email, sex, age) VALUES (?, ?, ?, ?)");
