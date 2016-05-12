@@ -103,7 +103,7 @@
 		if ($itsOkToWriteFile) {
 			// загрузка в файл
 			$data = 'Name: ' . $my_name . '; E-mail: ' . $my_email . '; Sex: ' . $my_sex . '; Age: ' . $my_age . "\n";
-			file_put_contents($file, $data, FILE_APPEND);
+			file_put_contents($file, $data, FILE_APPEND); // FILE_APPEND - этот флаг позволяет, если файл создан, дописывать в конец файлаы 
 			
 			// загрузка в БД
 			$querry = $con->prepare("INSERT INTO subscribe (name, email, sex, age) VALUES (?, ?, ?, ?)");
@@ -122,4 +122,5 @@
 	
 	// закрываем соединение
 	$con->close();
-?>
+// почитать как ведут себя ассоциативные массивы!!! 
+	?>
