@@ -1,4 +1,6 @@
 <?php
+	// подключаем класс Subscribe
+	require ('lab5.php');
 	// открываем сессию
 	session_start();
 	
@@ -14,6 +16,7 @@
 	$my_age = "";
 	$my_email = "";
 	$my_sex = "";
+	$my_Form = "";
 	$dbhost = "localhost";
 	$dbuser = "AnaShu";
 	$dbpass = ",tksqvbirf";
@@ -25,12 +28,18 @@
 	}
 	
 	// создаем соединение
-	$con = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+	$sub = new Subscribe();
+	$conError = $sub->ConnectToDB();
+	/*$con = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 	
-	// проверка соединения
+	 проверка соединения
 	if (mysqli_connect_errno()) {
 		$conError = "Ошибка соединения с БД: " . mysqli_connect_error();
 		exit();
+	}*/
+	
+	if (empty($my_Form)) { 
+		$my_Form = $sub->GenerateForm();
 	}
 	
 	// используем метод POST?
@@ -106,10 +115,15 @@
 			file_put_contents($file, $data, FILE_APPEND); // FILE_APPEND - этот флаг позволяет, если файл создан, дописывать в конец файлаы 
 			
 			// загрузка в БД
-			$querry = $con->prepare("INSERT INTO subscribe (name, email, sex, age) VALUES (?, ?, ?, ?)");
+			$res = $sub->Save($my_name, $my_email, $my_sex, $my_age);
+			$obj = $sub->GetAll();
+			$arr = $sub->ToArray($obj);
+			$str = $sub->ToStringAll($arr);
+			//$res = $sub->SetDataByEmail('mod08@mail.ru', 'Фил', 'Мужской', 12);
+			/*$querry = $con->prepare("INSERT INTO subscribe (name, email, sex, age) VALUES (?, ?, ?, ?)");
 			$querry->bind_param("sssd", $my_name, $my_email, $my_sex, $my_age); // "sssd" - это типы данных для каждого параметра по порядку
 			$querry->execute(); // выполнить запрос
-			$querry->close();
+			$querry->close();*/
 		}		
 		//echo ' Name ', $my_name, ' Email ', $my_email, ' Sex ', $_POST['sex'], ' Age ', $_POST['age'];
 	}
@@ -121,6 +135,9 @@
 	//session_destroy();
 	
 	// закрываем соединение
-	$con->close();
-// почитать как ведут себя ассоциативные массивы!!! 
-	?>
+	$obj = $sub->CutConnection();
+	//$con->close();
+	
+// почитать как ведут себя ассоциативные массивы!!!
+// уточнить про методы get и post 
+?>
