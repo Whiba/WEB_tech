@@ -18,7 +18,7 @@
 		public function GetColumnByName($my_column) { 
 			$querry = $this->Con->prepare("SELECT ? FROM subscribe");
 			$querry->bind_param("s", $my_column);
-			$querry->execute(); // выполнить запрос
+			$querry->execute(); // выполнить запрос, сюда можно добавить проверку result 
 			$data = mysqli_fetch_row(mysqli_use_result($querry));
 			$querry->close();
 			return $data;
@@ -29,7 +29,7 @@
 			$this->Email = $my_email;
 			$querry = $this->Con->prepare("SELECT name, email, sex, age FROM subscribe WHERE email=?");
 			$querry->bind_param("s", $this->Email);
-			$querry->execute(); // выполнить запрос
+			$querry->execute(); // выполнить запрос 
 			$querry->close();
 			return $querry;
 		}
@@ -113,39 +113,57 @@
 		}
 		
 		// возвращает код формы для работы с данным классом
+		// формат JSON строки: {"Имя_объекта": его значение в виде массива[значения массива записываем через ,]}
+		// значения в массиве могут быть: числовые(целые, дробные с точкой), "строковые",
+		// логические (true, false), [другие массивы], {другие объекты}, нулевое значение (null)
 		static function GenerateForm() {
+			//$form = require('build_form.php');
+			//require('form_data.php');
+			//$n = json_decode($name_my);
+			//echo $n->name;
+			//echo $form;
+			require('form_data.php');
+			$n = json_decode(stripslashes($name_my), true);
+			$myName = "<label for=\"name\">" . $n["name"][0] . "</label><input type=\"" . $n["name"][1] . "\" name=\"name\" pattern=\"" . $n["name"][2] . "\" placeholder=\"" . $n["name"][3] . "\" >";
+			$myEmail = "<label for=\"email\">" . $n["email"][0] . "<em>* </em></label><input type=\"" . $n["email"][1] . "\" name=\"email\" pattern=\"" . $n["email"][2] . "\" placeholder=\"" . $n["email"][3] . "\" " . $n["email"][4] . ">";
+			$mySex = "<form><label for=\"sex\">" . $n["sex"][0] . "</label><select name=\"sex\" ><option value=\"" . $n["sex"][1] . "\" >" . $n["sex"][2] . "</option><option value=\"" . $n["sex"][3] . "\" > " . $n["sex"][4] . " </option></select> </form>";			
+			$myAge = "<label for=\"age\">" . $n["age"][0] . "<em>* </em></label><input type=\"" . $n["age"][1] . "\" name=\"age\" pattern=\"" . $n["age"][2] . "\" placeholder=\"" . $n["age"][3] . "\" " . $n["age"][4] . ">";
+			$myAgree = "<input type=\"" . $n["agree"][0] . "\" name=\"agree\" value=\"" . $n["agree"][1] . "\" onchange=\"" . $n["agree"][2] . "\"> " . $n["agree"][3] . "<em>* </em>";
+			$myKey = "<input type=\"" . $n["mykey"][0] . "\" name=\"mykey\" value=\"" . $_SESSION['token'] . "\" />";
+			$mySubmit = "<input type=\"" . $n["Submit"][0] . "\" id=\"" . $n["Submit"][1] . "\" name=\"Submit\" value=\"" . $n["Submit"][2] . "\" disabled>";
+			//var_dump($n);
+
 			return '<html>
-			<form action="lab3.php" method="post"> <!--novalidate-->
-		<fieldset>
-			<legend><b>Контактная информация</b></legend>
-			<!--Имя может быть длиной от 2 до 15 символов, русскими буквами-->
-			<label for="name">Имя </label><input type="text" name="name" pattern="[А-Яа-я]{2,15}" placeholder="Введите ваше имя" >
-			<span><em><?=$nameError?></em></span><br />
-			<!--Почта должна быть написана английскими буквами, а по середине иметь знак "собака"-->
-			<label for="email">E-mail<em>* </em></label><input type="email" name="email" pattern="[0-9a-z]+@[a-z]+\.[a-z]+" placeholder="mail@mail.com" required>
-			<span><em><?=$emailError?></em></span><br />
-			<form>
-				<label for="sex">Пол</label>
-				<select name="sex" >
-					<option value="male" > Мужской </option>
-					<option value="female" > Женский </option>
-				</select>
-				<span><em><?=$sexError?></em></span>
-			</form>
-			<br />
-			<label for="age">Возраст<em>* </em></label><input type="text" name="age" pattern="[0-9]{1,3}" placeholder="20" required>
-			<span><em><?=$ageError?></em></span>
-			<form>
-				<input type="checkbox" name="agree" value="1" onchange="document.getElementById(\'submit\').disabled = !this.checked"> Согласен на обработку персональных данных<em>* </em>
-			</form>
-			<input type="hidden" name="mykey" value="<?=$_SESSION[\'token\']?>" />
-			<span><em><?=$conError?></em></span><br />
-			<input type="submit" id="submit" name="Submit" value="Отправить" disabled>
-		</fieldset>	
-	</form>
+					<form action="lab3.php" method="post"> 
+					<fieldset>
+						<legend><b>Information</b></legend>
+						<!--Имя может быть длиной от 2 до 15 символов, русскими буквами-->' .
+						$myName .
+						'<span><em><?=$nameError?></em></span><br />
+						<!--Почта должна быть написана английскими буквами, а по середине иметь знак "собака"-->' .
+						$myEmail .
+						'<span><em><?=$emailError?></em></span><br />' .
+						$mySex .
+							'<span><em><?=$sexError?></em></span>
+						<br />' .
+						$myAge .
+						'<span><em><?=$ageError?></em></span>
+						<form>' .
+							$myAgree .
+						'</form>' .
+						$myKey .
+						'<span><em><?=$conError?></em></span><br />' .
+						$mySubmit .
+					'</fieldset>	
+				</form>
 				</html>';
 		}
 	}
 // $this является ссылкой на вызываемый объект, если ее не указывать то появится синтаксическая ошибка, так как 
 // не понятно на какой именно объякт ссылаться
+// декоратор
+// поле - и его данные . Структура:
+// {"name": [Имя ,text" , pattern="[А-Яа-я]{2,15}" placeholder="Введите ваше имя" ]} json
+//  и походим по этому циклами собирая форму, проверяя валидацию, и т.д.
+// execute - Возвращает TRUE в случае успешного завершения или FALSE в случае возникновения ошибки.
 ?>

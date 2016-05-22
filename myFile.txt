@@ -74,3 +74,12 @@ Name: Владислав; E-mail: vladislav@yandex.ru; Sex: male; Age: 29
 Name: Владислав; E-mail: vladislav@yandex.ru; Sex: male; Age: 29
 Name: Владислав; E-mail: vladislav@yandex.ru; Sex: male; Age: 29
 Name: Владислав; E-mail: vladislav@yandex.ru; Sex: male; Age: 29
+Name: ; E-mail: ; Sex: ; Age: 
+Name: ; E-mail: ; Sex: ; Age: 
+Name: ; E-mail: ; Sex: ; Age: 
+Name: ; E-mail: ; Sex: ; Age: 
+Name: ; E-mail: ; Sex: ; Age: 
+Name: ; E-mail: ; Sex: ; Age: 
+Name: ; E-mail: ; Sex: ; Age: 
+Name: Рита; E-mail: rita@mail.com; Sex: female; Age: 19
+Name: Рита; E-mail: rita@mail.com; Sex: female; Age: 19

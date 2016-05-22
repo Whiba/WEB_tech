@@ -1,0 +1,2 @@
+{"name": ["Имя" ,"text", "[А-Яа-я]{2,15}", "Введите ваше имя"],
+"email": ["E-mail", "email", "[0-9a-z]+@[a-z]+\.[a-z]+", "mail@mail.com", "required"]}
